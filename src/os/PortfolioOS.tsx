@@ -20,6 +20,7 @@ import type { WallpaperId } from './wallpaper';
 import { sounds } from './sounds';
 import Screensaver from './Screensaver';
 import Clippy from './Clippy';
+import PizzaRatGame from './PizzaRatGame';
 
 type Phase = 'off' | 'bios' | 'booting' | 'on' | 'shutdown' | 'bsod';
 
@@ -31,6 +32,7 @@ const ICONS: { id: WindowId; icon: string; label: string }[] = [
   { id: 'resume', icon: '📄', label: 'resume.doc' },
   { id: 'contact', icon: '📧', label: 'Contact' },
   { id: 'recycle', icon: '🗑️', label: 'Recycle Bin' },
+  { id: 'pizza', icon: '🐀', label: 'pizza_rat.exe' },
 ];
 
 const BIOS_LINES = [
@@ -105,7 +107,6 @@ export default function PortfolioOS() {
 
   const [deskMenu, setDeskMenu] = useState<{ x: number; y: number } | null>(null);
 
-  // ✅ screensaver state (after 2 min idle)
   const [saver, setSaver] = useState(false);
 
   const [wallpaper, setWallpaper] = useState<WallpaperId>(() => {
@@ -131,7 +132,7 @@ export default function PortfolioOS() {
     useWindowManager();
 
   const powerOn = () => {
-    sounds.startup(); // 🔊 startup chime
+    sounds.startup();
     setPhase('bios');
   };
 
@@ -159,7 +160,6 @@ export default function PortfolioOS() {
     return () => clearTimeout(t);
   }, [phase, open]);
 
-  // ✅ screensaver: 2 minutes of no activity → starfield
   useEffect(() => {
     if (phase !== 'on') {
       setSaver(false);
@@ -183,7 +183,6 @@ export default function PortfolioOS() {
     };
   }, [phase]);
 
-  // 💀 BSOD easter egg: type "bsod" anywhere (not in form fields)
   useEffect(() => {
     let buf = '';
     const onKey = (e: KeyboardEvent) => {
@@ -203,7 +202,6 @@ export default function PortfolioOS() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // 💀 wake from BSOD: any key or click → back to power screen
   useEffect(() => {
     if (phase !== 'bsod') return;
 
@@ -217,7 +215,6 @@ export default function PortfolioOS() {
     };
   }, [phase]);
 
-  // 💀 the Blue Screen of Death
   if (phase === 'bsod') {
     return (
       <div className="os-screen os-bsod">
@@ -342,7 +339,12 @@ export default function PortfolioOS() {
           <button
             key={ic.id}
             className="os-icon"
+            onPointerUp={(event) => {
+              // ✅ fingers (real phones + DevTools emulation) open on tap
+              if (event.pointerType === 'touch') open(ic.id);
+            }}
             onClick={(event) => {
+              // keyboard (Enter/Space) + touch fallback
               if (coarse || event.detail === 0) open(ic.id);
             }}
             onDoubleClick={() => open(ic.id)}
@@ -369,6 +371,7 @@ export default function PortfolioOS() {
         380,
         <DisplayApp current={wallpaper} onPick={pickWallpaper} />
       )}
+      {win('pizza', 'Pizza Rat', '🐀', 380, <PizzaRatGame />)}
 
       <Taskbar
         windows={windows}
@@ -376,7 +379,7 @@ export default function PortfolioOS() {
         onFocus={focus}
         onMinimize={minimize}
         onShutdown={() => {
-          sounds.shutdown(); // 🔊 shutdown melody
+          sounds.shutdown();
           setPhase('shutdown');
         }}
       />
@@ -416,10 +419,8 @@ export default function PortfolioOS() {
         </div>
       )}
 
-      {/* 📺 screensaver on idle */}
       {saver && <Screensaver onWake={() => setSaver(false)} />}
 
-      {/* 📎 Clippy assistant */}
       {!saver && <Clippy onOpenResume={() => open('resume')} />}
     </div>
   );

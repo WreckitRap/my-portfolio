@@ -17,6 +17,7 @@ const MENU: { id: WindowId; icon: string; label: string }[] = [
   { id: 'skills', icon: '🛠️', label: 'Skills' },
   { id: 'resume', icon: '📄', label: 'Resume' },
   { id: 'contact', icon: '📧', label: 'Contact' },
+  { id: 'pizza', icon: '🐀', label: 'Pizza Rat' },
 ];
 
 export default function Taskbar({ windows, onOpen, onFocus, onMinimize, onShutdown }: TaskbarProps) {

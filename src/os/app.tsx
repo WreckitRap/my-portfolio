@@ -256,6 +256,7 @@ function ErrorDialog({
 
 export function ContactApp() {
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -270,7 +271,22 @@ export function ContactApp() {
       return;
     }
 
-    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${encodeURIComponent(message)}`;
+    // ✅ More reliable way to trigger mailto than window.location.href
+    const mailtoLink = `mailto:${profile.email}?subject=${subject}&body=${encodeURIComponent(message)}`;
+    const a = document.createElement('a');
+    a.href = mailtoLink;
+    a.click();
+  };
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(profile.email);
+      setCopied(true);
+      sounds.click();
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* fallback if clipboard fails */
+    }
   };
 
   const withProtocol = (url: string) =>
@@ -283,7 +299,13 @@ export function ContactApp() {
   return (
     <form className="contact-form" onSubmit={submit}>
       <label>
-        To: <input className="os-input" value={profile.email} readOnly />
+        To:
+        <div style={{ display: 'flex', gap: '4px', marginTop: '4px' }}>
+          <input className="os-input" value={profile.email} readOnly style={{ flex: 1 }} />
+          <button type="button" className="os-btn" onClick={copyEmail} style={{ minWidth: '72px' }}>
+            {copied ? '✓ Copied' : 'Copy'}
+          </button>
+        </div>
       </label>
 
       <label>

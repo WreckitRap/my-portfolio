@@ -3,7 +3,7 @@ import { sounds } from './sounds';
 
 export type WindowId =
   | 'computer' | 'about' | 'projects' | 'skills'
-  | 'resume' | 'contact' | 'recycle' | 'display';
+  | 'resume' | 'contact' | 'recycle' | 'display' | 'pizza';
 
 export interface WindowState {
   id: WindowId;
@@ -26,10 +26,11 @@ const DEFAULT_POS: Record<WindowId, { x: number; y: number }> = {
   contact:  { x: 370, y: 130 },
   recycle:  { x: 300, y: 150 },
   display:  { x: 340, y: 120 },
+  pizza:    { x: 300, y: 80 },
 };
 
 function initialState(): Record<WindowId, WindowState> {
-  const ids: WindowId[] = ['computer', ...WINDOW_ORDER, 'recycle', 'display'];
+  const ids: WindowId[] = ['computer', ...WINDOW_ORDER, 'recycle', 'display', 'pizza'];
   return Object.fromEntries(
     ids.map((id, i) => [
       id,

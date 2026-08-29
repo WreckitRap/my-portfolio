@@ -663,3 +663,52 @@
   .os-start-flag { display: none; }
   .os-tray { font-size: 11px; }
 }
+
+/* ===== pizza rat game ===== */
+.pizza-game {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  background: #c0c0c0;
+}
+
+.pizza-hud {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+}
+
+.pizza-stage {
+  position: relative;
+  align-self: center;
+  box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #fff;
+  touch-action: none;
+}
+
+.pizza-stage canvas { display: block; }
+
+.pizza-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; padding: 16px; text-align: center;
+  font-family: 'VT323', 'Courier New', monospace;
+  font-size: 18px;
+}
+
+.pizza-overlay p { margin: 0; }
+.pizza-title { font-size: 26px; color: #ffb000; }
+.pizza-keys { color: #9f9f9f; }
+
+.pizza-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pizza-controls .os-btn {
+  min-width: 64px;
+  font-size: 14px;
+}
