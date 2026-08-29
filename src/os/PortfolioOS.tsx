@@ -18,7 +18,7 @@ import './os95.css';
 import { WALLPAPERS, DEFAULT_WALLPAPER } from './wallpaper';
 import type { WallpaperId } from './wallpaper';
 import { sounds } from './sounds';
-import Screensaver from './ScreenSaver';
+import Screensaver from './Screensaver';
 import Clippy from './Clippy';
 
 type Phase = 'off' | 'bios' | 'booting' | 'on' | 'shutdown' | 'bsod';
