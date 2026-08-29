@@ -74,10 +74,6 @@ export default function PizzaRatGame() {
     motes: [] as Mote[],
   });
 
-  const [gameState, setGameState] = useState<'start' | 'playing' | 'over'>('start');
-  const [score, setScore] = useState(0);
-  const [lives, setLives] = useState(3);
-  const [level, setLevel] = useState(1);
   const [best, setBest] = useState(() => {
     try {
       return Number(localStorage.getItem('ratPizzaBest') ?? 0);
@@ -153,16 +149,12 @@ export default function PizzaRatGame() {
       s.shake = 0;
       s.flash = 0;
       s.uiHint = 4;
-      setScore(0);
-      setLives(3);
-      setLevel(1);
     };
 
     const startGame = () => {
       reset();
       s.state = 'playing';
       s.paused = false;
-      setGameState('playing');
     };
 
     const spawnItem = () => {
@@ -229,7 +221,6 @@ export default function PizzaRatGame() {
         crumbs(it.x, it.y, '#ffd24d', 14);
         sCheese();
       }
-      setScore(s.score);
     };
 
     const hitBomb = (it: Item) => {
@@ -241,7 +232,6 @@ export default function PizzaRatGame() {
       explosion(it.x, it.y);
       s.texts.push({ x: it.x, y: it.y - 24, str: '−1 ♥', life: 1, color: '#ff6b6b', size: 19 });
       sBomb();
-      setLives(s.lives);
       if (s.lives <= 0) {
         s.state = 'over';
         s.overAt = performance.now();
@@ -253,7 +243,6 @@ export default function PizzaRatGame() {
           } catch {}
           setBest(s.best);
         }
-        setGameState('over');
         sOver();
       }
     };
@@ -292,7 +281,6 @@ export default function PizzaRatGame() {
       if (newLevel > s.level) {
         s.level = newLevel;
         s.texts.push({ x: W / 2, y: H / 2 - 60, str: 'LEVEL ' + s.level + '!', life: 1.4, color: '#7ff3ff', size: 26 });
-        setLevel(s.level);
         sLevel();
       }
 
