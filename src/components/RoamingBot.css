@@ -1,0 +1,25 @@
+.roaming-bot {
+  position: fixed;
+  bottom: 16px;
+  left: 0;
+  z-index: 40;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.roaming-bot-sprite {
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .roaming-bot {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .roaming-bot-sprite svg {
+    width: 42px;
+    height: 42px;
+  }
+}

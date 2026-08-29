@@ -1,0 +1,13 @@
+.space-warp-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 480px) {
+  .space-warp-bg {
+    display: none;
+  }
+}

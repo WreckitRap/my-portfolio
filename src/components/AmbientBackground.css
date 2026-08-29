@@ -1,0 +1,13 @@
+.ambient-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 480px) {
+  .ambient-bg {
+    display: none; /* keep small screens light on GPU/battery */
+  }
+}
