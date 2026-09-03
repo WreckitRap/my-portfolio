@@ -57,7 +57,7 @@ export const projects: Project[] = [
     impact: 'Laravel 12 · React · Inertia.js · Tailwind · MySQL',
     description:
       'Full-stack hospital scheduling system for nursing teams. Admins build conflict-free weekly schedules digitally, nurses request time off, and coverage gaps are detected automatically. Built to help hospital admins schedule from home instead of staying extra hours.',
-    link: 'https://nurse-scheduler.freepage.cc/login',
+    link: 'https://nurse.ralphtungcul.dev/login',
   },
   {
     icon: '🧩',
