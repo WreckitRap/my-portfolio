@@ -1,3 +1,4 @@
+// 🐀 Pizza Rat worldwide leaderboard API
 import { useEffect, useRef, useState } from 'react';
 
 const W = 480;
