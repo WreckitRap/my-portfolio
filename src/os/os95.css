@@ -139,7 +139,13 @@
   box-shadow: inset -1px -1px 0 #0a0a0a, inset 1px 1px 0 #fff, inset -2px -2px 0 #808080, inset 2px 2px 0 #dfdfdf;
 }
 .os-titlebtn:active { box-shadow: inset 1px 1px 0 #0a0a0a, inset -1px -1px 0 #fff, inset 2px 2px 0 #808080, inset -2px -2px 0 #dfdfdf; }
-.os-window-body { margin-top: 3px; overflow: auto; min-height: 0; display: flex; flex-direction: column; }
+.os-window-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Hides scrollbars when maximized */
+  min-height: 0;
+}
 
 /* ===== generic controls ===== */
 .os-btn {
@@ -712,3 +718,61 @@
   min-width: 64px;
   font-size: 14px;
 }
+
+/* ===== pizza rat responsive ===== */
+.pizza-wrap {
+  flex: 1; /* Takes up all available space inside the window */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #c0c0c0;
+  padding: 8px;
+  overflow: hidden;
+  min-height: 0; /* Crucial flexbox fix to prevent overflow */
+}
+
+.pizza-canvas {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 3 / 4; /* Forces the 480:640 ratio perfectly at ANY size */
+  border-radius: 8px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  touch-action: none;
+  cursor: crosshair;
+  background: #0f1322; /* Matches the game background so there's no white flash */
+}
+
+/* ===== hall of fame dialog ===== */
+.pizza-wrap { position: relative; }
+
+.pizza-dialog {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: min(320px, 90%);
+  height: fit-content;
+  max-height: 95%;
+  overflow: auto;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #fff #404040 #404040 #fff;
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.5);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+  z-index: 5;
+}
+
+.pizza-dialog-title { margin: 0; font-weight: 700; }
+.pizza-saved { margin: 0; color: #008000; font-weight: 700; }
+
+.pizza-top {
+  background: #fff;
+  border: 1px solid #808080;
+  padding: 8px;
+}
+.pizza-top-title { margin: 0 0 6px; font-weight: 700; }
+.pizza-top-row, .pizza-top-empty { margin: 2px 0; }

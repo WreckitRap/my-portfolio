@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 const W = 480;
 const H = 640;
 const TAU = Math.PI * 2;
+const SCALE = 2; 
 
 interface Particle {
   x: number;
@@ -82,11 +83,56 @@ export default function PizzaRatGame() {
     }
   });
 
+  // --- HALL OF FAME STATE ---
+  const [phase, setPhase] = useState<'start' | 'playing' | 'over'>('start');
+  const [finalScore, setFinalScore] = useState(0);
+  const [top, setTop] = useState<{ name: string; score: number }[]>([]);
+  const [playerName, setPlayerName] = useState('');
+  const [saved, setSaved] = useState(false);
+  const gameApi = useRef<{ restart: () => void } | null>(null);
+
+  const loadTop = async () => {
+    try {
+      const r = await fetch('/api/scores');
+      if (r.ok) setTop(await r.json());
+    } catch {
+      /* no API in local dev — that's fine */
+    }
+  };
+
+  useEffect(() => {
+    loadTop();
+  }, []);
+
+  const saveScore = async () => {
+    try {
+      await fetch('/api/scores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: playerName.trim() || 'Anonymous',
+          score: finalScore,
+        }),
+      });
+    } catch {
+      /* ignore */
+    }
+    setSaved(true);
+    await loadTop();
+  };
+
+  const playAgain = () => {
+    setSaved(false);
+    setPhase('playing');
+    gameApi.current?.restart();
+  };
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    ctx.setTransform(SCALE, 0, 0, SCALE, 0, 0);
 
     const s = stateRef.current;
     s.best = best;
@@ -155,7 +201,10 @@ export default function PizzaRatGame() {
       reset();
       s.state = 'playing';
       s.paused = false;
+      setPhase('playing');
+      setSaved(false);
     };
+    gameApi.current = { restart: startGame };
 
     const spawnItem = () => {
       const bombP = Math.min(0.2 + s.level * 0.03, 0.42);
@@ -243,6 +292,8 @@ export default function PizzaRatGame() {
           } catch {}
           setBest(s.best);
         }
+        setFinalScore(s.score); // Trigger Hall of Fame UI
+        setPhase('over');       // Trigger Hall of Fame UI
         sOver();
       }
     };
@@ -632,6 +683,10 @@ export default function PizzaRatGame() {
     };
 
     const onKeyDown = (e: KeyboardEvent) => {
+      // Prevent game keys from firing when typing in the name input
+      const target = e.target as HTMLElement;
+      if (target.closest('input, textarea')) return;
+
       if (e.code === 'ArrowLeft' || e.code === 'KeyA') s.keys.left = true;
       if (e.code === 'ArrowRight' || e.code === 'KeyD') s.keys.right = true;
       if (e.code === 'Space' || e.code === 'Enter') {
@@ -699,21 +754,52 @@ export default function PizzaRatGame() {
   }, [best]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', padding: '8px' }}>
+    <div className="pizza-wrap">
       <canvas
         ref={canvasRef}
-        width={W}
-        height={H}
-        style={{
-          width: '100%',
-          maxWidth: '480px',
-          height: 'auto',
-          borderRadius: '8px',
-          boxShadow: '0 10px 50px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06)',
-          touchAction: 'none',
-          cursor: 'crosshair',
-        }}
+        width={W * SCALE}
+        height={H * SCALE}
+        className="pizza-canvas"
       />
+
+      {/* HALL OF FAME DIALOG */}
+      {phase === 'over' && (
+        <div className="pizza-dialog">
+          <p className="pizza-dialog-title">💥 GAME OVER — score {finalScore}</p>
+
+          {!saved ? (
+            <>
+              <input
+                className="os-input"
+                maxLength={20}
+                placeholder="Your name"
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+              />
+              <button className="os-btn" onClick={saveScore}>
+                💾 Save to Hall of Fame
+              </button>
+            </>
+          ) : (
+            <p className="pizza-saved">✅ Saved! You're on the board.</p>
+          )}
+
+          <div className="pizza-top">
+            <p className="pizza-top-title">🏆 TOP RATS (worldwide)</p>
+            {top.length === 0 ? (
+              <p className="pizza-top-empty">No scores yet — be the first!</p>
+            ) : (
+              top.slice(0, 5).map((t, i) => (
+                <p key={`${t.name}-${i}`} className="pizza-top-row">
+                  {i + 1}. {t.name} — {t.score}
+                </p>
+              ))
+            )}
+          </div>
+
+          <button className="os-btn" onClick={playAgain}>🔄 Play again</button>
+        </div>
+      )}
     </div>
   );
 }
