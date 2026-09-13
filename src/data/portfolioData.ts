@@ -57,7 +57,7 @@ export const projects: Project[] = [
     year: '2026',
     impact: 'Next.js · TypeScript · Prisma · MySQL · Auth.js · Vercel · Gemini AI',
     description:
-      'AI-powered project management SaaS with task tracking, team collaboration, and an intelligent assistant. Features client-side avatar optimization (96% payload reduction), parallel query execution with database indexing, and a rate-limited AI assistant built on a provider-agnostic architecture. Includes human-in-the-loop design patterns and production performance profiling.',
+      'AI-powered project management SaaS with task tracking, team collaboration, and an intelligent assistant. Features client-side avatar optimization (96% payload reduction), parallel query execution with database indexing, and a rate-limited AI assistant built on a provider-agnostic architecture, verified through production performance profiling.',
     link: 'https://pebrusa.ralphtungcul.dev',
   },
   {
