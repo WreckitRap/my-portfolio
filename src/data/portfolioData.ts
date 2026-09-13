@@ -43,12 +43,23 @@ export const profile: Profile = {
 
 export const aboutText: string[] = [
   "Hi! I'm Ralph — a Software Engineer and Full Stack Web Developer based in Quezon City, Philippines.",
-  'I build end-to-end web applications using the VILT stack: Vue.js, Inertia.js, Laravel, and Tailwind CSS. I also work with the MERN stack: MongoDB, Express.js, React.js, and Node.js, along with MySQL.',
-  'I enjoy creating dynamic user interfaces, optimizing backend services, and making sure the frontend and backend communicate smoothly.',
+  'I build end-to-end web applications using modern TypeScript with Next.js and Prisma, the VILT stack (Vue.js, Inertia.js, Laravel, Tailwind CSS), and the MERN stack (MongoDB, Express.js, React.js, Node.js). I work with both MySQL and MongoDB depending on the use case.',
+  'For deployment and infrastructure, I use GitHub for version control and CI/CD, Vercel for frontend and serverless deployments, and Google Cloud Platform for scalable backend services.',
+  'I enjoy creating dynamic user interfaces, optimizing backend services, and making sure the frontend and backend communicate smoothly. I also care deeply about performance — profiling production apps and optimizing database queries are part of my regular workflow.',
   'Before moving fully into software engineering, I handled project supervision and project control work, so I also care about delivery, communication, and practical business results — not just code.',
 ];
 
 export const projects: Project[] = [
+  {
+    icon: '🐕',
+    name: 'PEBRUSA',
+    role: 'Full Stack Developer',
+    year: '2026',
+    impact: 'Next.js · TypeScript · Prisma · MySQL · Auth.js · Vercel · Gemini AI',
+    description:
+      'AI-powered project management SaaS with task tracking, team collaboration, and an intelligent assistant. Features client-side avatar optimization (96% payload reduction), parallel query execution with database indexing, and a rate-limited AI assistant built on a provider-agnostic architecture. Includes human-in-the-loop design patterns and production performance profiling.',
+    link: 'https://pebrusa.ralphtungcul.dev',
+  },
   {
     icon: '🏥',
     name: 'NURSE_SCHEDULER',
@@ -98,15 +109,30 @@ export const projects: Project[] = [
 ];
 
 export const skills: Record<string, string[]> = {
+  'Next.js Stack': [
+    'Next.js',
+    'TypeScript',
+    'Prisma ORM',
+    'Auth.js / Better Auth',
+    'Tailwind CSS',
+    'AI Integration (Gemini)',
+  ],
   'VILT Stack': ['Vue.js', 'Inertia.js', 'Laravel', 'Tailwind CSS'],
   'MERN Stack': ['MongoDB', 'Express.js', 'React.js', 'Node.js'],
+  'DevOps & Cloud': [
+    'GitHub',
+    'Vercel',
+    'Google Cloud Platform (GCP)',
+    'MySQL / Hostinger',
+    'CI/CD Pipelines',
+  ],
   Core: [
     'HTML',
     'CSS',
     'JavaScript',
     'PHP',
     'React Native',
-    'MySQL',
+    'REST APIs',
   ],
 };
 
@@ -148,17 +174,23 @@ export const resume = {
     'Zuitt Web Developer Program — Full Stack Web Development (MERN Stack), Completer, June–August 2023',
     'Basic Android Development Training, DICT Region 02, October 2022',
   ],
-  stack: [
-    'Vue.js',
-    'Inertia.js',
-    'Laravel',
-    'Tailwind CSS',
-    'React.js',
-    'React Native',
-    'Node.js',
-    'Express.js',
-    'PHP',
-    'MySQL',
-    'MongoDB',
-  ],
+ stack: [
+  'Next.js',
+  'TypeScript',
+  'Vue.js',
+  'Inertia.js',
+  'Laravel',
+  'Tailwind CSS',
+  'React.js',
+  'React Native',
+  'Node.js',
+  'Express.js',
+  'PHP',
+  'MySQL',
+  'MongoDB',
+  'Prisma ORM',
+  'GitHub',
+  'Vercel',
+  'Google Cloud Platform',
+],
 };
