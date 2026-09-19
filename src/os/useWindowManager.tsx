@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from 'react';
 import { sounds } from './sounds';
 
 export type WindowId =
-  | 'computer' | 'about' | 'projects' | 'skills'
+  | 'computer' | 'about' | 'projects' | 'skills'   | 'guestbook' 
   | 'resume' | 'contact' | 'recycle' | 'display' | 'pizza';
 
 export interface WindowState {
@@ -22,6 +22,7 @@ const DEFAULT_POS: Record<WindowId, { x: number; y: number }> = {
   about:    { x: 200, y: 90 },
   projects: { x: 250, y: 70 },
   skills:   { x: 310, y: 110 },
+  guestbook: { x: 280, y: 140 },
   resume:   { x: 230, y: 50 },
   contact:  { x: 370, y: 130 },
   recycle:  { x: 300, y: 150 },

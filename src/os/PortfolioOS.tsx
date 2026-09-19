@@ -13,6 +13,7 @@ import {
   ResumeApp,
   SkillsApp,
   DisplayApp,
+  GuestbookApp, 
 } from './app';
 import './os95.css';
 import { WALLPAPERS, DEFAULT_WALLPAPER } from './wallpaper';
@@ -31,6 +32,7 @@ const ICONS: { id: WindowId; icon: string; label: string }[] = [
   { id: 'skills', icon: '🛠️', label: 'Skills.exe' },
   { id: 'resume', icon: '📄', label: 'resume.doc' },
   { id: 'contact', icon: '📧', label: 'Contact' },
+  { id: 'guestbook', icon: '📖', label: 'Guestbook' }, 
   { id: 'recycle', icon: '🗑️', label: 'Recycle Bin' },
   { id: 'pizza', icon: '🐀', label: 'pizza_rat.exe' },
 ];
@@ -363,6 +365,7 @@ export default function PortfolioOS() {
       {win('skills', 'Skills - Control Panel', '🛠️', 420, <SkillsApp />)}
       {win('resume', 'resume.doc - WordPad', '📄', 560, <ResumeApp />)}
       {win('contact', 'New Message', '📧', 430, <ContactApp />)}
+      {win('guestbook', 'Guestbook', '📖', 420, <GuestbookApp />)}  
       {win('recycle', 'Recycle Bin', '🗑️', 380, <RecycleApp />)}
       {win(
         'display',
