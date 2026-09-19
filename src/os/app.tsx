@@ -11,6 +11,7 @@ import type { Project } from '../data/portfolioData';
 import { WALLPAPERS, WALLPAPER_IDS } from './wallpaper';
 import type { WallpaperId } from './wallpaper';
 import { sounds } from './sounds';
+import { Mascot } from 'page-mascot';
 
 export function ComputerApp() {
   return (
@@ -63,7 +64,20 @@ export function AboutApp() {
       <div className="notepad-body">
         <p>Hello, world!</p>
 
-        {aboutText.map((paragraph, index) => (
+        {/*  + intro side by side */}
+        <div className="about-hero">
+          <div className="about-hero-mascot mascot-static">
+            <Mascot
+              directions="/mascots/ralph-directions.png"
+              size={110}
+              label="Ralph"
+            />
+          </div>
+          <p className="about-hero-text">{aboutText[0]}</p>
+        </div>
+
+        {/* the rest of the paragraphs below, full width */}
+        {aboutText.slice(1).map((paragraph, index) => (
           <p key={`about-paragraph-${index}`}>{paragraph}</p>
         ))}
 

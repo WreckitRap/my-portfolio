@@ -776,3 +776,35 @@
 }
 .pizza-top-title { margin: 0 0 6px; font-weight: 700; }
 .pizza-top-row, .pizza-top-empty { margin: 2px 0; }
+
+
+/* ===== about hero: pug + intro side by side ===== */
+.about-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 10px 0 14px;
+}
+
+.about-hero-mascot {
+  flex: 0 0 auto;   /* pug keeps his size */
+}
+
+.about-hero-text {
+  margin: 0;
+  flex: 1;          /* text takes the remaining space */
+  font-weight: 400; /* intro line stands out a bit */
+}
+
+/* on tiny phone windows, stack them again */
+@media (max-width: 480px) {
+  .about-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Ralph looks, but cannot be poked */
+.mascot-static {
+  pointer-events: none;
+}
