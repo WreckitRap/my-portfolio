@@ -1,9 +1,9 @@
 import { useRef } from 'react';
-import type { CSSProperties, ReactNode } from 'react';
+import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from 'react';
 import type { WindowState } from './useWindowManager';
 
 interface WindowProps {
-  state: WindowState;
+  state?: WindowState;
   title: string;
   icon?: string;
   width?: number;
@@ -21,7 +21,33 @@ export default function Window({
 }: WindowProps) {
   const drag = useRef<{ dx: number; dy: number } | null>(null);
 
-  if (!state.open) return null;
+  if (!state || !state.open) return null;
+
+  const startDrag = (e: ReactPointerEvent<HTMLElement>) => {
+    if (state.maximized) return;
+    if ((e.target as HTMLElement).closest('button')) return;
+
+    drag.current = { dx: e.clientX - state.x, dy: e.clientY - state.y };
+
+    const onMoveEv = (ev: PointerEvent) => {
+      if (!drag.current) return;
+      onMove(
+        Math.min(Math.max(ev.clientX - drag.current.dx, -width + 80), window.innerWidth - 40),
+        Math.min(Math.max(ev.clientY - drag.current.dy, 0), window.innerHeight - 80),
+      );
+    };
+
+    const onUpEv = () => {
+      drag.current = null;
+      window.removeEventListener('pointermove', onMoveEv);
+      window.removeEventListener('pointerup', onUpEv);
+      window.removeEventListener('pointercancel', onUpEv);
+    };
+
+    window.addEventListener('pointermove', onMoveEv);
+    window.addEventListener('pointerup', onUpEv);
+    window.addEventListener('pointercancel', onUpEv);
+  };
 
   const style: CSSProperties = state.maximized
     ? { left: 0, top: 0, width: '100%', height: 'calc(100% - 38px)', zIndex: state.z }
@@ -36,20 +62,8 @@ export default function Window({
     >
       <header
         className="os-titlebar"
-        onPointerDown={(e) => {
-          if (state.maximized) return;
-          if ((e.target as HTMLElement).closest('button')) return;
-          drag.current = { dx: e.clientX - state.x, dy: e.clientY - state.y };
-          e.currentTarget.setPointerCapture(e.pointerId);
-        }}
-        onPointerMove={(e) => {
-          if (!drag.current) return;
-          onMove(
-            Math.min(Math.max(e.clientX - drag.current.dx, -width + 80), window.innerWidth - 40),
-            Math.min(Math.max(e.clientY - drag.current.dy, 0), window.innerHeight - 80),
-          );
-        }}
-        onPointerUp={() => { drag.current = null; }}
+        style={{ touchAction: 'none', userSelect: 'none' }}
+        onPointerDown={startDrag}
         onDoubleClick={onMaximize}
       >
         {icon && <span aria-hidden="true">{icon}</span>}

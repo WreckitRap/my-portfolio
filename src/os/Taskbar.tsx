@@ -17,7 +17,11 @@ const MENU: { id: WindowId; icon: string; label: string }[] = [
   { id: 'skills', icon: '🛠️', label: 'Skills' },
   { id: 'resume', icon: '📄', label: 'Resume' },
   { id: 'contact', icon: '📧', label: 'Contact' },
+  { id: 'guestbook', icon: '📖', label: 'Guestbook' },
   { id: 'pizza', icon: '🐀', label: 'Pizza Rat' },
+  { id: 'computer', icon: '🖥️', label: 'My Computer' },
+  { id: 'recycle', icon: '🗑️', label: 'Recycle Bin' },
+  { id: 'display', icon: '🎨', label: 'Display' },
 ];
 
 export default function Taskbar({ windows, onOpen, onFocus, onMinimize, onShutdown }: TaskbarProps) {
@@ -72,7 +76,16 @@ export default function Taskbar({ windows, onOpen, onFocus, onMinimize, onShutdo
             ))}
             <div className="os-startmenu-sep" />
             <button className="os-startmenu-item" onClick={onShutdown}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
                 <path d="M12 2v10" />
                 <path d="M18.4 6.6a9 9 0 1 1-12.8 0" />
               </svg>

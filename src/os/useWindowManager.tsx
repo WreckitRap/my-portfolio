@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from 'react';
 import { sounds } from './sounds';
 
 export type WindowId =
-  | 'computer' | 'about' | 'projects' | 'skills'   | 'guestbook' 
+  | 'computer' | 'about' | 'projects' | 'skills' | 'guestbook'
   | 'resume' | 'contact' | 'recycle' | 'display' | 'pizza';
 
 export interface WindowState {
@@ -15,25 +15,34 @@ export interface WindowState {
   y: number;
 }
 
-export const WINDOW_ORDER: WindowId[] = ['about', 'projects', 'skills', 'resume', 'contact'];
+// Taskbar order — now includes EVERY window, so every open app gets a button
+export const WINDOW_ORDER: WindowId[] = [
+  'about', 'projects', 'skills', 'resume', 'contact',
+  'guestbook', 'pizza', 'computer', 'recycle', 'display',
+];
+
+// Guarantees every WindowId exists in state (never a missing key again)
+const ALL_IDS: WindowId[] = [
+  'computer', 'about', 'projects', 'skills', 'guestbook',
+  'resume', 'contact', 'recycle', 'display', 'pizza',
+];
 
 const DEFAULT_POS: Record<WindowId, { x: number; y: number }> = {
-  computer: { x: 120, y: 60 },
-  about:    { x: 200, y: 90 },
-  projects: { x: 250, y: 70 },
-  skills:   { x: 310, y: 110 },
+  computer:  { x: 120, y: 60 },
+  about:     { x: 200, y: 90 },
+  projects:  { x: 250, y: 70 },
+  skills:    { x: 310, y: 110 },
   guestbook: { x: 280, y: 140 },
-  resume:   { x: 230, y: 50 },
-  contact:  { x: 370, y: 130 },
-  recycle:  { x: 300, y: 150 },
-  display:  { x: 340, y: 120 },
-  pizza:    { x: 300, y: 80 },
+  resume:    { x: 230, y: 50 },
+  contact:   { x: 370, y: 130 },
+  recycle:   { x: 300, y: 150 },
+  display:   { x: 340, y: 120 },
+  pizza:     { x: 300, y: 80 },
 };
 
 function initialState(): Record<WindowId, WindowState> {
-  const ids: WindowId[] = ['computer', ...WINDOW_ORDER, 'recycle', 'display', 'pizza'];
   return Object.fromEntries(
-    ids.map((id, i) => [
+    ALL_IDS.map((id, i) => [
       id,
       { id, open: false, minimized: false, maximized: false, z: 10 + i, ...DEFAULT_POS[id] },
     ]),
@@ -54,35 +63,32 @@ export function useWindowManager() {
   }, [patch]);
 
   const open = useCallback((id: WindowId) => {
-  sounds.click();
-  topZ.current += 1;
-  patch(id, { open: true, minimized: false, z: topZ.current });
-}, [patch]);
+    sounds.click();
+    topZ.current += 1;
+    patch(id, { open: true, minimized: false, z: topZ.current });
+  }, [patch]);
 
-    const close = useCallback((id: WindowId) => {
+  const close = useCallback((id: WindowId) => {
     sounds.click();
     patch(id, { open: false, maximized: false });
-    }, [patch]);
+  }, [patch]);
 
-    const minimize = useCallback((id: WindowId) => {
+  const minimize = useCallback((id: WindowId) => {
     sounds.click();
     patch(id, { minimized: true });
-    }, [patch]);
+  }, [patch]);
 
-    const toggleMaximize = useCallback((id: WindowId) => {
+  const toggleMaximize = useCallback((id: WindowId) => {
     sounds.click();
     topZ.current += 1;
     const z = topZ.current;
     setWindows((w) => ({
-        ...w,
-        [id]: { ...w[id], maximized: !w[id].maximized, minimized: false, z },
+      ...w,
+      [id]: { ...w[id], maximized: !w[id].maximized, minimized: false, z },
     }));
-    }, []);
-
-
+  }, []);
 
   const move = useCallback((id: WindowId, x: number, y: number) => patch(id, { x, y }), [patch]);
 
   return { windows, open, close, minimize, toggleMaximize, focus, move };
 }
-
