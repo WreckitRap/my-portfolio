@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import {
   aboutText,
@@ -422,6 +422,92 @@ export function DisplayApp({
       </div>
 
       <p className="display-hint">Changes apply instantly and are saved on this computer.</p>
+    </div>
+  );
+}
+
+export function GuestbookApp() {
+  const [entries, setEntries] = useState<
+    { id: number; name: string; message: string; createdAt: string }[]
+  >([]);
+  const [name, setName] = useState('');
+  const [message, setMessage] = useState('');
+  const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+
+  const load = async () => {
+    try {
+      const r = await fetch('/api/guestbook');
+      if (r.ok) setEntries(await r.json());
+    } catch {
+      /* no API in local dev */
+    }
+  };
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  const sign = async () => {
+    if (!message.trim() || status === 'saving') return;
+    setStatus('saving');
+    try {
+      const r = await fetch('/api/guestbook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name.trim() || 'Anonymous', message: message.trim() }),
+      });
+      if (r.ok) {
+        setName('');
+        setMessage('');
+        setStatus('saved');
+        await load();
+      } else {
+        setStatus('error');
+      }
+    } catch {
+      setStatus('error');
+    }
+  };
+
+  return (
+    <div className="guestbook">
+      <div className="guestbook-form">
+        <input
+          className="os-input"
+          maxLength={20}
+          placeholder="Your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <textarea
+          className="os-input guestbook-msg"
+          maxLength={200}
+          placeholder="Leave a message for Ralph..."
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+        <button className="os-btn" onClick={sign} disabled={status === 'saving'}>
+          ✍️ Sign the guestbook
+        </button>
+        {status === 'saved' && <span className="guestbook-ok">✅ Signed! Thank you!</span>}
+        {status === 'error' && <span className="guestbook-err">❌ Couldn't save — try again</span>}
+      </div>
+
+      <div className="guestbook-list">
+        {entries.length === 0 ? (
+          <p className="guestbook-empty">No messages yet — be the first!</p>
+        ) : (
+          entries.map((e) => (
+            <div key={e.id} className="guestbook-entry">
+              <p className="guestbook-entry-head">
+                <b>📌 {e.name}</b>
+                <span>{new Date(e.createdAt).toLocaleDateString()}</span>
+              </p>
+              <p className="guestbook-entry-msg">{e.message}</p>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }

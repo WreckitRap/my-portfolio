@@ -808,3 +808,53 @@
 .mascot-static {
   pointer-events: none;
 }
+
+/* ===== guestbook ===== */
+.guestbook {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  height: 100%;
+  overflow: auto;
+  background: #c0c0c0;
+}
+
+.guestbook-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.guestbook-msg {
+  min-height: 60px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.guestbook-ok { color: #008000; font-weight: 700; }
+.guestbook-err { color: #b00000; font-weight: 700; }
+
+.guestbook-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.guestbook-entry {
+  background: #ffffe1;           /* sticky-note yellow 📝 */
+  border: 1px solid #808080;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.25);
+  padding: 8px 10px;
+}
+
+.guestbook-entry-head {
+  margin: 0 0 4px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.guestbook-entry-msg { margin: 0; white-space: pre-wrap; }
+.guestbook-empty { text-align: center; color: #555; }
