@@ -7,6 +7,15 @@ export interface Wallpaper {
   style: CSSProperties;
 }
 
+export type SchemeId = 'standard' | 'night';
+
+export const SCHEMES: { id: SchemeId; label: string }[] = [
+  { id: 'standard', label: 'Standard' },
+  { id: 'night',    label: 'Night ☾' },
+];
+
+export const DEFAULT_SCHEME: SchemeId = 'standard';
+
 export const WALLPAPERS: Record<WallpaperId, Wallpaper> = {
   teal: {
     label: 'Classic Teal',

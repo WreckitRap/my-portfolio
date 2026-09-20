@@ -3,7 +3,7 @@ import { sounds } from './sounds';
 
 export type WindowId =
   | 'computer' | 'about' | 'projects' | 'skills' | 'guestbook'
-  | 'resume' | 'contact' | 'recycle' | 'display' | 'pizza';
+  | 'resume' | 'contact' | 'recycle' | 'display' | 'pizza' | 'music';
 
 export interface WindowState {
   id: WindowId;
@@ -18,13 +18,13 @@ export interface WindowState {
 // Taskbar order — now includes EVERY window, so every open app gets a button
 export const WINDOW_ORDER: WindowId[] = [
   'about', 'projects', 'skills', 'resume', 'contact',
-  'guestbook', 'pizza', 'computer', 'recycle', 'display',
+  'guestbook', 'pizza', 'music', 'computer', 'recycle', 'display',
 ];
 
 // Guarantees every WindowId exists in state (never a missing key again)
 const ALL_IDS: WindowId[] = [
   'computer', 'about', 'projects', 'skills', 'guestbook',
-  'resume', 'contact', 'recycle', 'display', 'pizza',
+  'resume', 'contact', 'recycle', 'display', 'pizza', 'music',
 ];
 
 const DEFAULT_POS: Record<WindowId, { x: number; y: number }> = {
@@ -38,6 +38,7 @@ const DEFAULT_POS: Record<WindowId, { x: number; y: number }> = {
   recycle:   { x: 300, y: 150 },
   display:   { x: 340, y: 120 },
   pizza:     { x: 300, y: 80 },
+  music:     { x: 320, y: 100 },
 };
 
 function initialState(): Record<WindowId, WindowState> {

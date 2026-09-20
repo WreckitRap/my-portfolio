@@ -8,8 +8,8 @@ import {
   resume,
 } from '../data/portfolioData';
 import type { Project } from '../data/portfolioData';
-import { WALLPAPERS, WALLPAPER_IDS } from './wallpaper';
-import type { WallpaperId } from './wallpaper';
+import { WALLPAPERS, WALLPAPER_IDS, SCHEMES } from './wallpaper';
+import type { WallpaperId, SchemeId } from './wallpaper';
 import { sounds } from './sounds';
 import { Mascot } from 'page-mascot';
 
@@ -397,9 +397,13 @@ export function RecycleApp() {
 export function DisplayApp({
   current,
   onPick,
+  scheme,
+  onPickScheme,
 }: {
   current: WallpaperId;
   onPick: (id: WallpaperId) => void;
+  scheme: SchemeId;
+  onPickScheme: (id: SchemeId) => void;
 }) {
   return (
     <div className="display-props">
@@ -408,7 +412,6 @@ export function DisplayApp({
       </div>
 
       <p className="display-label">Wallpaper:</p>
-
       <div className="display-list">
         {WALLPAPER_IDS.map((id) => (
           <button
@@ -421,7 +424,22 @@ export function DisplayApp({
         ))}
       </div>
 
-      <p className="display-hint">Changes apply instantly and are saved on this computer.</p>
+      <p className="display-label">Color scheme:</p>
+      <div className="display-list">
+        {SCHEMES.map((s) => (
+          <button
+            key={s.id}
+            className={`display-option ${s.id === scheme ? 'selected' : ''}`}
+            onClick={() => onPickScheme(s.id)}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
+
+      <p className="display-hint">
+        Changes apply instantly and are saved on this computer.
+      </p>
     </div>
   );
 }

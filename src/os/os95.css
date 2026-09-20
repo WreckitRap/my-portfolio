@@ -858,3 +858,332 @@
 
 .guestbook-entry-msg { margin: 0; white-space: pre-wrap; }
 .guestbook-empty { text-align: center; color: #555; }
+
+/* ===== Music.exe (Winamp vibes) ===== */
+.mp {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  height: 100%;
+  background: #c0c0c0;
+  overflow: hidden;
+}
+
+.mp-stage { display: flex; gap: 12px; align-items: center; }
+
+.mp-art {
+  width: 96px; height: 96px; flex: 0 0 auto;
+  border: 2px solid; border-color: #808080 #fff #fff #808080;
+  background: #000; display: grid; place-items: center; overflow: hidden;
+}
+.mp-art img { width: 100%; height: 100%; object-fit: cover; }
+.mp-art-empty { color: #555; font-size: 40px; }
+.mp-art.spin img { animation: mp-spin 8s linear infinite; }
+@keyframes mp-spin { to { transform: rotate(360deg); } }
+
+.mp-info { flex: 1; min-width: 0; }
+.mp-track {
+  margin: 0; font-weight: 700; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+  background: #000; color: #33ff66; padding: 3px 6px;
+  font-family: Consolas, monospace; font-size: 13px;
+  border: 1px solid #404040;
+}
+.mp-artist {
+  margin: 4px 0 6px; font-size: 11px; color: #333;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.mp-viz { display: flex; gap: 2px; align-items: flex-end; height: 22px; margin-bottom: 6px; }
+.mp-viz span {
+  width: 5px; height: 4px; background: #33ff66;
+  border-top: 1px solid #0a3d1a;
+}
+.mp-viz.on span { animation: mp-bounce 0.5s ease-in-out infinite alternate; }
+@keyframes mp-bounce { from { height: 3px; } to { height: 22px; } }
+
+.mp-bar { display: flex; align-items: center; gap: 6px; }
+.mp-time { font-family: Consolas, monospace; font-size: 11px; min-width: 30px; text-align: center; }
+.mp-range { flex: 1; accent-color: #000080; }
+.mp-range-sm { width: 70px; flex: 0 0 auto; }
+
+.mp-transport { display: flex; align-items: center; gap: 6px; }
+.mp-btn { min-width: 38px; font-size: 15px; }
+.mp-play { min-width: 46px; font-size: 17px; }
+.mp-vol { font-size: 14px; }
+
+.mp-search { display: flex; flex-direction: column; gap: 6px; }
+.mp-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.mp-chip { font-size: 11px; padding: 2px 8px; text-transform: lowercase; }
+.mp-chip.active { background: #000080; color: #fff; }
+.mp-form { display: flex; gap: 6px; }
+.mp-form .os-input { flex: 1; }
+
+.mp-list {
+  flex: 1; min-height: 0; overflow: auto;
+  background: #fff; border: 2px solid; border-color: #808080 #fff #fff #808080;
+}
+.mp-row {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 4px 6px; border: 0; background: transparent;
+  text-align: left; cursor: pointer; font: inherit;
+}
+.mp-row img { width: 28px; height: 28px; flex: 0 0 auto; object-fit: cover; border: 1px solid #999; }
+.mp-row-txt { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.mp-row-txt b { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mp-row-txt i { font-size: 11px; color: #555; font-style: normal; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mp-row:hover { background: #d8d8f0; }
+.mp-row.active { background: #000080; }
+.mp-row.active b, .mp-row.active i { color: #fff; }
+.mp-row-eq { font-size: 12px; color: #33ff66; }
+.mp-empty { text-align: center; color: #555; padding: 14px; }
+
+.mp-list {
+  max-height: 260px;
+}
+
+
+/* ============================================================
+   NIGHT SCHEME  (Display Properties → Appearance → "Night ☾")
+   charcoal chrome, indigo selection, dimmed paper.
+   Scoped so Standard mode is 100% unaffected.
+   ============================================================ */
+.os-desktop[data-scheme="night"] {
+  --n-face: #2b2b33;
+  --n-hi:   #4d4d59;
+  --n-lo:   #15151b;
+  --n-field:#16161c;
+  --n-ink:  #d6d6de;
+  --n-dim:  #9a9aa6;
+  --n-sel:  #34346a;
+  --n-paper:#1c1c24;
+  color: var(--n-ink);
+}
+
+/* raised chrome: windows, taskbar, menus, panels, dialogs */
+.os-desktop[data-scheme="night"] .os-window,
+.os-desktop[data-scheme="night"] .os-taskbar,
+.os-desktop[data-scheme="night"] .os-startmenu,
+.os-desktop[data-scheme="night"] .os-ctx-menu,
+.os-desktop[data-scheme="night"] .os-dialog,
+.os-desktop[data-scheme="night"] .display-props,
+.os-desktop[data-scheme="night"] .sysprops,
+.os-desktop[data-scheme="night"] .control-panel,
+.os-desktop[data-scheme="night"] .recycle,
+.os-desktop[data-scheme="night"] .explorer,
+.os-desktop[data-scheme="night"] .guestbook,
+.os-desktop[data-scheme="night"] .mp {
+  background: var(--n-face);
+  color: var(--n-ink);
+}
+
+/* titlebars */
+.os-desktop[data-scheme="night"] .os-titlebar {
+  background: #2a2a55;
+  color: #fff;
+}
+.os-desktop[data-scheme="night"] .os-menubar {
+  background: var(--n-face);
+  color: var(--n-ink);
+}
+
+/* raised buttons (_ □ × , Start , transport , chips , Go) */
+.os-desktop[data-scheme="night"] .os-btn,
+.os-desktop[data-scheme="night"] .os-titlebtn,
+.os-desktop[data-scheme="night"] .os-start {
+  background: var(--n-face);
+  color: var(--n-ink);
+  border-color: var(--n-hi) var(--n-lo) var(--n-lo) var(--n-hi);
+}
+.os-desktop[data-scheme="night"] .os-btn:active,
+.os-desktop[data-scheme="night"] .os-titlebtn:active,
+.os-desktop[data-scheme="night"] .os-start:active {
+  border-color: var(--n-lo) var(--n-hi) var(--n-hi) var(--n-lo);
+}
+
+/* sunken fields + the white "paper" bodies */
+.os-desktop[data-scheme="night"] .os-input,
+.os-desktop[data-scheme="night"] .os-textarea,
+.os-desktop[data-scheme="night"] .notepad,
+.os-desktop[data-scheme="night"] .notepad-body,
+.os-desktop[data-scheme="night"] .wordpad,
+.os-desktop[data-scheme="night"] .wordpad-body,
+.os-desktop[data-scheme="night"] .mp-list,
+.os-desktop[data-scheme="night"] .os-tray {
+  background: var(--n-paper);
+  color: var(--n-ink);
+  border-color: var(--n-lo) var(--n-hi) var(--n-hi) var(--n-lo);
+}
+.os-desktop[data-scheme="night"] .os-input,
+.os-desktop[data-scheme="night"] .os-textarea { background: var(--n-field); }
+
+/* tables (Projects / System Properties) */
+.os-desktop[data-scheme="night"] .os-table th {
+  background: var(--n-face);
+  color: var(--n-ink);
+}
+.os-desktop[data-scheme="night"] .os-table td,
+.os-desktop[data-scheme="night"] .os-table th {
+  border-color: var(--n-lo);
+}
+.os-desktop[data-scheme="night"] .os-table tr.selected td,
+.os-desktop[data-scheme="night"] .mp-row.active,
+.os-desktop[data-scheme="night"] .display-option.selected,
+.os-desktop[data-scheme="night"] .os-tab.active,
+.os-desktop[data-scheme="night"] .mp-chip.active,
+.os-desktop[data-scheme="night"] .os-task.active {
+  background: var(--n-sel);
+  color: #fff;
+}
+.os-desktop[data-scheme="night"] .mp-row:hover,
+.os-desktop[data-scheme="night"] .os-startmenu-item:hover,
+.os-desktop[data-scheme="night"] .os-ctx-item:hover,
+.os-desktop[data-scheme="night"] .display-option:hover {
+  background: #3a3a48;
+  color: var(--n-ink);
+}
+
+/* display-option buttons carry their own bevel (not .os-btn) */
+.os-desktop[data-scheme="night"] .display-option {
+  background: var(--n-face);
+  color: var(--n-ink);
+  border-color: var(--n-hi) var(--n-lo) var(--n-lo) var(--n-hi);
+}
+.os-desktop[data-scheme="night"] .display-option:active {
+  border-color: var(--n-lo) var(--n-hi) var(--n-hi) var(--n-lo);
+}
+
+/* tabs + checkboxes + ranges */
+.os-desktop[data-scheme="night"] .os-tabs { background: var(--n-face); }
+.os-desktop[data-scheme="night"] .os-tab {
+  background: var(--n-face);
+  color: var(--n-ink);
+  border-color: var(--n-hi) var(--n-lo) transparent var(--n-hi);
+}
+.os-desktop[data-scheme="night"] .os-check { color: var(--n-ink); }
+.os-desktop[data-scheme="night"] .os-check input,
+.os-desktop[data-scheme="night"] .mp-range { accent-color: var(--n-sel); }
+
+/* secondary / hint text everywhere */
+.os-desktop[data-scheme="night"] .explorer-hint,
+.os-desktop[data-scheme="night"] .display-hint,
+.os-desktop[data-scheme="night"] .display-label,
+.os-desktop[data-scheme="night"] .recycle-sub,
+.os-desktop[data-scheme="night"] .sysprops-reg,
+.os-desktop[data-scheme="night"] .sysprops-sub,
+.os-desktop[data-scheme="night"] .wp-sub,
+.os-desktop[data-scheme="night"] .mp-artist,
+.os-desktop[data-scheme="night"] .mp-credit,
+.os-desktop[data-scheme="night"] .mp-empty,
+.os-desktop[data-scheme="night"] .guestbook-empty,
+.os-desktop[data-scheme="night"] .mp-row-txt i,
+.os-desktop[data-scheme="night"] .guestbook-entry-head span {
+  color: var(--n-dim);
+}
+
+/* guestbook sticky notes → warm dark notes (identity kept) */
+.os-desktop[data-scheme="night"] .guestbook-entry {
+  background: #2a2718;
+  color: #e3d79a;
+  border-color: var(--n-lo);
+}
+.os-desktop[data-scheme="night"] .guestbook-entry b { color: #f0e6a8; }
+
+/* media player row text + covers */
+.os-desktop[data-scheme="night"] .mp-row-txt b { color: var(--n-ink); }
+.os-desktop[data-scheme="night"] .mp-row.active .mp-row-txt b,
+.os-desktop[data-scheme="night"] .mp-row.active .mp-row-txt i { color: #fff; }
+
+/* start-menu side banner + separators */
+.os-desktop[data-scheme="night"] .os-startmenu-side {
+  background: #20204a;
+  color: #cfcfe6;
+}
+.os-desktop[data-scheme="night"] .os-startmenu-sep,
+.os-desktop[data-scheme="night"] .os-ctx-sep {
+  border-color: var(--n-lo) var(--n-hi) var(--n-hi) var(--n-lo);
+}
+
+/* dialog body text */
+.os-desktop[data-scheme="night"] .os-dialog-body p { color: var(--n-ink); }
+
+/* ============================================================
+   NIGHT v2 — UNIFORM DARK  (supersedes the white-paper idea)
+   Your screenshot showed Resume(dark) vs Projects(white rows)
+   disagreeing. Two windows in one frame must look like ONE
+   machine → documents go dark too, table rows stop being white.
+   Appended last on purpose: same selectors, later = wins.
+   ============================================================ */
+
+/* documents → dark metal + light ink (overrides old white bg / black text) */
+.os-desktop[data-scheme="night"] .notepad,
+.os-desktop[data-scheme="night"] .notepad-body,
+.os-desktop[data-scheme="night"] .wordpad,
+.os-desktop[data-scheme="night"] .wordpad-body {
+  background: var(--n-field);
+  color: var(--n-ink);
+}
+/* force EVERY scrap of text inside the docs light, whatever the base
+   CSS set on h1 / h2 / p / li / strong — scoped so nothing leaks out */
+.os-desktop[data-scheme="night"] .notepad-body *,
+.os-desktop[data-scheme="night"] .wordpad-body * {
+  color: var(--n-ink);
+}
+
+/* projects table → the rows/cells were still white; make them dark metal */
+.os-desktop[data-scheme="night"] .os-table,
+.os-desktop[data-scheme="night"] .os-table tbody,
+.os-desktop[data-scheme="night"] .os-table tr,
+.os-desktop[data-scheme="night"] .os-table td {
+  background: var(--n-field);
+}
+/* header row a shade lighter so it still reads as a header */
+.os-desktop[data-scheme="night"] .os-table th {
+  background: var(--n-face);
+  color: var(--n-ink);
+}
+/* selected + hover keep their deep-blue / grey highlights, white text */
+.os-desktop[data-scheme="night"] .os-table tr.selected td {
+  background: var(--n-sel);
+  color: #fff;
+}
+.os-desktop[data-scheme="night"] .os-table tbody tr:hover td {
+  background: var(--n-hover);
+}
+
+/* ============================================================
+   NIGHT v3 — row HOVER  (the selected-blue rule works, so this
+   uses the identical targeting + a high-contrast lift + an inset
+   accent bar that can't be hidden by a transparent cell)
+   ============================================================ */
+.os-desktop[data-scheme="night"] .os-table tbody tr:hover,
+.os-desktop[data-scheme="night"] .os-table tbody tr:hover td {
+  background: #45454f;            /* clearly lighter than the #16161c rows */
+}
+.os-desktop[data-scheme="night"] .os-table tbody tr:hover td:first-child {
+  box-shadow: inset 3px 0 0 #9a9aac;   /* left accent bar, zero layout shift */
+}
+/* keep the selected row's blue winning over hover (selected > hover) */
+.os-desktop[data-scheme="night"] .os-table tr.selected td,
+.os-desktop[data-scheme="night"] .os-table tr.selected:hover td {
+  background: var(--n-sel);
+  color: #fff;
+}
+
+/* NIGHT v4 — Clippy's note stays yellow (the glow is the point),
+   but its text was inheriting my light night ink → washed out.
+   Re-pin the note's TEXT to a dark warm ink. Shotgun of the
+   probable class names because I can't see Clippy.tsx; if none
+   match, paste that one tiny file and I'll cut this to 3 lines. */
+.os-desktop[data-scheme="night"] .clippy-bubble,
+.os-desktop[data-scheme="night"] .clippy-tip,
+.os-desktop[data-scheme="night"] .clippy-speech,
+.os-desktop[data-scheme="night"] .clippy-message,
+.os-desktop[data-scheme="night"] .clippy-text,
+.os-desktop[data-scheme="night"] .clippy p,
+.os-desktop[data-scheme="night"] .clippy span,
+.os-desktop[data-scheme="night"] .clippy-bubble p,
+.os-desktop[data-scheme="night"] .clippy-bubble span {
+  color: #2a2a12 !important;
+}

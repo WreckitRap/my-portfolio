@@ -19,6 +19,7 @@ const MENU: { id: WindowId; icon: string; label: string }[] = [
   { id: 'contact', icon: '📧', label: 'Contact' },
   { id: 'guestbook', icon: '📖', label: 'Guestbook' },
   { id: 'pizza', icon: '🐀', label: 'Pizza Rat' },
+  { id: 'music', icon: '🎵', label: 'Music' },          // ← THE ONE LINE
   { id: 'computer', icon: '🖥️', label: 'My Computer' },
   { id: 'recycle', icon: '🗑️', label: 'Recycle Bin' },
   { id: 'display', icon: '🎨', label: 'Display' },

@@ -16,12 +16,13 @@ import {
   GuestbookApp, 
 } from './app';
 import './os95.css';
-import { WALLPAPERS, DEFAULT_WALLPAPER } from './wallpaper';
-import type { WallpaperId } from './wallpaper';
+import { WALLPAPERS, DEFAULT_WALLPAPER, SCHEMES, DEFAULT_SCHEME } from './wallpaper';
+import type { WallpaperId, SchemeId } from './wallpaper';
 import { sounds } from './sounds';
 import Screensaver from './Screensaver';
 import Clippy from './Clippy';
 import PizzaRatGame from './PizzaRatGame';
+import MediaPlayerApp from './MediaPlayer';
 
 type Phase = 'off' | 'bios' | 'booting' | 'on' | 'shutdown' | 'bsod';
 
@@ -35,6 +36,7 @@ const ICONS: { id: WindowId; icon: string; label: string }[] = [
   { id: 'guestbook', icon: '📖', label: 'Guestbook' }, 
   { id: 'recycle', icon: '🗑️', label: 'Recycle Bin' },
   { id: 'pizza', icon: '🐀', label: 'pizza_rat.exe' },
+  { id: 'music', icon: '🎵', label: 'Music.exe' },
 ];
 
 const BIOS_LINES = [
@@ -125,6 +127,25 @@ export default function PortfolioOS() {
     setWallpaper(id);
     try {
       localStorage.setItem('portfolioos-wallpaper', id);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  const [scheme, setScheme] = useState<SchemeId>(() => {
+    try {
+      const saved = localStorage.getItem('portfolioos-scheme');
+      if (saved && SCHEMES.some((s) => s.id === saved)) return saved as SchemeId;
+    } catch {
+      /* ignore */
+    }
+    return DEFAULT_SCHEME;
+  });
+
+  const pickScheme = (id: SchemeId) => {
+    setScheme(id);
+    try {
+      localStorage.setItem('portfolioos-scheme', id);
     } catch {
       /* ignore */
     }
@@ -332,6 +353,7 @@ export default function PortfolioOS() {
   return (
     <div
       className="os-desktop"
+      data-scheme={scheme}
       style={WALLPAPERS[wallpaper].style}
       onContextMenu={onDesktopContextMenu}
       onClick={() => setDeskMenu(null)}
@@ -365,16 +387,22 @@ export default function PortfolioOS() {
       {win('skills', 'Skills - Control Panel', '🛠️', 420, <SkillsApp />)}
       {win('resume', 'resume.doc - WordPad', '📄', 560, <ResumeApp />)}
       {win('contact', 'New Message', '📧', 430, <ContactApp />)}
-      {win('guestbook', 'Guestbook', '📖', 420, <GuestbookApp />)}  
+      {win('guestbook', 'Guestbook', '📖', 420, <GuestbookApp />)}
       {win('recycle', 'Recycle Bin', '🗑️', 380, <RecycleApp />)}
       {win(
         'display',
         'Display Properties',
         '🎨',
         380,
-        <DisplayApp current={wallpaper} onPick={pickWallpaper} />
+        <DisplayApp
+          current={wallpaper}
+          onPick={pickWallpaper}
+          scheme={scheme}
+          onPickScheme={pickScheme}
+        />,
       )}
       {win('pizza', 'Pizza Rat', '🐀', 380, <PizzaRatGame />)}
+      {win('music', 'Music Player', '🎵', 430, <MediaPlayerApp />)}
 
       <Taskbar
         windows={windows}
