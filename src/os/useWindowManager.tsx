@@ -1,9 +1,20 @@
-import { useCallback, useRef, useState } from 'react';
-import { sounds } from './sounds';
+import { useCallback, useRef, useState } from "react";
+import { sounds } from "./sounds";
 
+// ✅ 1. Added 'terminal' to WindowId
 export type WindowId =
-  | 'computer' | 'about' | 'projects' | 'skills' | 'guestbook'
-  | 'resume' | 'contact' | 'recycle' | 'display' | 'pizza' | 'music';
+  | "computer"
+  | "about"
+  | "projects"
+  | "skills"
+  | "guestbook"
+  | "resume"
+  | "contact"
+  | "recycle"
+  | "display"
+  | "pizza"
+  | "music"
+  | "terminal"; // ← NEW
 
 export interface WindowState {
   id: WindowId;
@@ -15,37 +26,66 @@ export interface WindowState {
   y: number;
 }
 
-// Taskbar order — now includes EVERY window, so every open app gets a button
+// ✅ 2. Added 'terminal' to WINDOW_ORDER (Taskbar buttons)
 export const WINDOW_ORDER: WindowId[] = [
-  'about', 'projects', 'skills', 'resume', 'contact',
-  'guestbook', 'pizza', 'music', 'computer', 'recycle', 'display',
+  "about",
+  "projects",
+  "skills",
+  "resume",
+  "contact",
+  "guestbook",
+  "pizza",
+  "music",
+  "computer",
+  "recycle",
+  "display",
+  "terminal", // ← NEW
 ];
 
-// Guarantees every WindowId exists in state (never a missing key again)
+// ✅ 3. Added 'terminal' to ALL_IDS (State initialization)
 const ALL_IDS: WindowId[] = [
-  'computer', 'about', 'projects', 'skills', 'guestbook',
-  'resume', 'contact', 'recycle', 'display', 'pizza', 'music',
+  "computer",
+  "about",
+  "projects",
+  "skills",
+  "guestbook",
+  "resume",
+  "contact",
+  "recycle",
+  "display",
+  "pizza",
+  "music",
+  "terminal", // ← NEW
 ];
 
+// ✅ 4. Added default position for 'terminal'
 const DEFAULT_POS: Record<WindowId, { x: number; y: number }> = {
-  computer:  { x: 120, y: 60 },
-  about:     { x: 200, y: 90 },
-  projects:  { x: 250, y: 70 },
-  skills:    { x: 310, y: 110 },
+  computer: { x: 120, y: 60 },
+  about: { x: 200, y: 90 },
+  projects: { x: 250, y: 70 },
+  skills: { x: 310, y: 110 },
   guestbook: { x: 280, y: 140 },
-  resume:    { x: 230, y: 50 },
-  contact:   { x: 370, y: 130 },
-  recycle:   { x: 300, y: 150 },
-  display:   { x: 340, y: 120 },
-  pizza:     { x: 300, y: 80 },
-  music:     { x: 320, y: 100 },
+  resume: { x: 230, y: 50 },
+  contact: { x: 370, y: 130 },
+  recycle: { x: 300, y: 150 },
+  display: { x: 340, y: 120 },
+  pizza: { x: 300, y: 80 },
+  music: { x: 320, y: 100 },
+  terminal: { x: 150, y: 150 }, // ← NEW POSITION
 };
 
 function initialState(): Record<WindowId, WindowState> {
   return Object.fromEntries(
     ALL_IDS.map((id, i) => [
       id,
-      { id, open: false, minimized: false, maximized: false, z: 10 + i, ...DEFAULT_POS[id] },
+      {
+        id,
+        open: false,
+        minimized: false,
+        maximized: false,
+        z: 10 + i,
+        ...DEFAULT_POS[id],
+      },
     ]),
   ) as Record<WindowId, WindowState>;
 }
@@ -58,26 +98,38 @@ export function useWindowManager() {
     setWindows((w) => ({ ...w, [id]: { ...w[id], ...p } }));
   }, []);
 
-  const focus = useCallback((id: WindowId) => {
-    topZ.current += 1;
-    patch(id, { z: topZ.current, minimized: false });
-  }, [patch]);
+  const focus = useCallback(
+    (id: WindowId) => {
+      topZ.current += 1;
+      patch(id, { z: topZ.current, minimized: false });
+    },
+    [patch],
+  );
 
-  const open = useCallback((id: WindowId) => {
-    sounds.click();
-    topZ.current += 1;
-    patch(id, { open: true, minimized: false, z: topZ.current });
-  }, [patch]);
+  const open = useCallback(
+    (id: WindowId) => {
+      sounds.click();
+      topZ.current += 1;
+      patch(id, { open: true, minimized: false, z: topZ.current });
+    },
+    [patch],
+  );
 
-  const close = useCallback((id: WindowId) => {
-    sounds.click();
-    patch(id, { open: false, maximized: false });
-  }, [patch]);
+  const close = useCallback(
+    (id: WindowId) => {
+      sounds.click();
+      patch(id, { open: false, maximized: false });
+    },
+    [patch],
+  );
 
-  const minimize = useCallback((id: WindowId) => {
-    sounds.click();
-    patch(id, { minimized: true });
-  }, [patch]);
+  const minimize = useCallback(
+    (id: WindowId) => {
+      sounds.click();
+      patch(id, { minimized: true });
+    },
+    [patch],
+  );
 
   const toggleMaximize = useCallback((id: WindowId) => {
     sounds.click();
@@ -89,7 +141,10 @@ export function useWindowManager() {
     }));
   }, []);
 
-  const move = useCallback((id: WindowId, x: number, y: number) => patch(id, { x, y }), [patch]);
+  const move = useCallback(
+    (id: WindowId, x: number, y: number) => patch(id, { x, y }),
+    [patch],
+  );
 
   return { windows, open, close, minimize, toggleMaximize, focus, move };
 }

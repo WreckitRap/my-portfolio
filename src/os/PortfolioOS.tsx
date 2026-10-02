@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import type { MouseEvent as ReactMouseEvent, ReactNode } from 'react';
-import { useWindowManager } from './useWindowManager';
-import type { WindowId } from './useWindowManager';
-import Window from './Window';
-import Taskbar from './Taskbar';
+import { useEffect, useMemo, useState } from "react"; // ← Added useMemo
+import type { MouseEvent as ReactMouseEvent, ReactNode } from "react";
+import { useWindowManager, WINDOW_ORDER } from "./useWindowManager"; // ← Imported WINDOW_ORDER
+import type { WindowId } from "./useWindowManager";
+import Window from "./Window";
+import Taskbar from "./Taskbar";
 import {
   AboutApp,
   ComputerApp,
@@ -13,45 +13,52 @@ import {
   ResumeApp,
   SkillsApp,
   DisplayApp,
-  GuestbookApp, 
-} from './app';
-import './os95.css';
-import { WALLPAPERS, DEFAULT_WALLPAPER, SCHEMES, DEFAULT_SCHEME } from './wallpaper';
-import type { WallpaperId, SchemeId } from './wallpaper';
-import { sounds } from './sounds';
-import Screensaver from './Screensaver';
-import Clippy from './Clippy';
-import PizzaRatGame from './PizzaRatGame';
-import MediaPlayerApp from './MediaPlayer';
+  GuestbookApp,
+  TerminalApp, // ✅ 1. IMPORT TERMINAL APP
+} from "./app";
+import "./os95.css";
+import {
+  WALLPAPERS,
+  DEFAULT_WALLPAPER,
+  SCHEMES,
+  DEFAULT_SCHEME,
+} from "./wallpaper";
+import type { WallpaperId, SchemeId } from "./wallpaper";
+import { sounds } from "./sounds";
+import Screensaver from "./Screensaver";
+import Clippy from "./Clippy";
+import PizzaRatGame from "./PizzaRatGame";
+import MediaPlayerApp from "./MediaPlayer";
 
-type Phase = 'off' | 'bios' | 'booting' | 'on' | 'shutdown' | 'bsod';
+type Phase = "off" | "bios" | "booting" | "on" | "shutdown" | "bsod";
 
 const ICONS: { id: WindowId; icon: string; label: string }[] = [
-  { id: 'computer', icon: '🖥️', label: 'My Computer' },
-  { id: 'about', icon: '📝', label: 'about_me.txt' },
-  { id: 'projects', icon: '📁', label: 'Projects' },
-  { id: 'skills', icon: '🛠️', label: 'Skills.exe' },
-  { id: 'resume', icon: '📄', label: 'resume.doc' },
-  { id: 'contact', icon: '📧', label: 'Contact' },
-  { id: 'guestbook', icon: '📖', label: 'Guestbook' }, 
-  { id: 'recycle', icon: '🗑️', label: 'Recycle Bin' },
-  { id: 'pizza', icon: '🐀', label: 'pizza_rat.exe' },
-  { id: 'music', icon: '🎵', label: 'Music.exe' },
+  { id: "computer", icon: "🖥️", label: "My Computer" },
+  { id: "about", icon: "📝", label: "about_me.txt" },
+  { id: "projects", icon: "📁", label: "Projects" },
+  { id: "skills", icon: "🛠️", label: "Skills.exe" },
+  { id: "resume", icon: "📄", label: "resume.doc" },
+  { id: "contact", icon: "📧", label: "Contact" },
+  { id: "guestbook", icon: "📖", label: "Guestbook" },
+  { id: "recycle", icon: "🗑️", label: "Recycle Bin" },
+  { id: "pizza", icon: "🐀", label: "pizza_rat.exe" },
+  { id: "music", icon: "🎵", label: "Music.exe" },
+  { id: "terminal", icon: "💻", label: "MS-DOS Prompt" }, // ✅ 2. ADD TERMINAL ICON
 ];
 
 const BIOS_LINES = [
-  'Portfolio BIOS v4.2 - (C) 1995 Tungcul Systems',
-  'CPU : VILT/MERN Dual-Stack Processor @ 3.5GHz',
-  'Memory Test : 640K OK (ought to be enough for anybody)',
-  'Detecting PRIMARY SKILLS .. Vue.js Laravel React Node.js',
-  'Detecting SECONDARY .. MySQL MongoDB Tailwind CSS',
-  'C:\\> boot PORTFOLIO.SYS',
+  "Portfolio BIOS v4.2 - (C) 1995 Tungcul Systems",
+  "CPU : VILT/MERN Dual-Stack Processor @ 3.5GHz",
+  "Memory Test : 640K OK (ought to be enough for anybody)",
+  "Detecting PRIMARY SKILLS .. Vue.js Laravel React Node.js",
+  "Detecting SECONDARY .. MySQL MongoDB Tailwind CSS",
+  "C:\\> boot PORTFOLIO.SYS",
 ];
 
 const LOADER_BLOCKS = 14;
 
 const coarse =
-  typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches;
+  typeof window !== "undefined" && window.matchMedia("(hover: none)").matches;
 
 function BiosScreen({ onDone }: { onDone: () => void }) {
   const [count, setCount] = useState(0);
@@ -107,15 +114,17 @@ function PowerIcon() {
 }
 
 export default function PortfolioOS() {
-  const [phase, setPhase] = useState<Phase>('off');
+  const [phase, setPhase] = useState<Phase>("off");
 
-  const [deskMenu, setDeskMenu] = useState<{ x: number; y: number } | null>(null);
+  const [deskMenu, setDeskMenu] = useState<{ x: number; y: number } | null>(
+    null,
+  );
 
   const [saver, setSaver] = useState(false);
 
   const [wallpaper, setWallpaper] = useState<WallpaperId>(() => {
     try {
-      const saved = localStorage.getItem('portfolioos-wallpaper');
+      const saved = localStorage.getItem("portfolioos-wallpaper");
       if (saved && saved in WALLPAPERS) return saved as WallpaperId;
     } catch {
       /* ignore */
@@ -126,7 +135,7 @@ export default function PortfolioOS() {
   const pickWallpaper = (id: WallpaperId) => {
     setWallpaper(id);
     try {
-      localStorage.setItem('portfolioos-wallpaper', id);
+      localStorage.setItem("portfolioos-wallpaper", id);
     } catch {
       /* ignore */
     }
@@ -134,8 +143,9 @@ export default function PortfolioOS() {
 
   const [scheme, setScheme] = useState<SchemeId>(() => {
     try {
-      const saved = localStorage.getItem('portfolioos-scheme');
-      if (saved && SCHEMES.some((s) => s.id === saved)) return saved as SchemeId;
+      const saved = localStorage.getItem("portfolioos-scheme");
+      if (saved && SCHEMES.some((s) => s.id === saved))
+        return saved as SchemeId;
     } catch {
       /* ignore */
     }
@@ -145,7 +155,7 @@ export default function PortfolioOS() {
   const pickScheme = (id: SchemeId) => {
     setScheme(id);
     try {
-      localStorage.setItem('portfolioos-scheme', id);
+      localStorage.setItem("portfolioos-scheme", id);
     } catch {
       /* ignore */
     }
@@ -154,15 +164,28 @@ export default function PortfolioOS() {
   const { windows, open, close, minimize, toggleMaximize, focus, move } =
     useWindowManager();
 
+  // ✅ NEW: Calculate the top-most active window ID for Clippy
+  const activeWindowId = useMemo(() => {
+    // Filter only open and non-minimized windows
+    const openWins = WINDOW_ORDER.map((id) => windows[id]).filter(
+      (w) => w.open && !w.minimized,
+    );
+
+    if (openWins.length === 0) return null;
+
+    // Find the one with the highest z-index
+    return openWins.reduce((a, b) => (a.z > b.z ? a : b)).id;
+  }, [windows]);
+
   const powerOn = () => {
     sounds.startup();
-    setPhase('bios');
+    setPhase("bios");
   };
 
   const onDesktopContextMenu = (event: ReactMouseEvent<HTMLDivElement>) => {
     const target = event.target as HTMLElement;
 
-    if (target.closest('input, textarea, select, a')) return;
+    if (target.closest("input, textarea, select, a")) return;
 
     event.preventDefault();
 
@@ -173,18 +196,18 @@ export default function PortfolioOS() {
   };
 
   useEffect(() => {
-    if (phase !== 'booting') return;
+    if (phase !== "booting") return;
 
     const t = setTimeout(() => {
-      setPhase('on');
-      open('about');
+      setPhase("on");
+      open("about");
     }, 2800);
 
     return () => clearTimeout(t);
   }, [phase, open]);
 
   useEffect(() => {
-    if (phase !== 'on') {
+    if (phase !== "on") {
       setSaver(false);
       return;
     }
@@ -197,7 +220,7 @@ export default function PortfolioOS() {
       timer = window.setTimeout(() => setSaver(true), 120000);
     };
 
-    const evs = ['mousemove', 'mousedown', 'keydown', 'touchstart'] as const;
+    const evs = ["mousemove", "mousedown", "keydown", "touchstart"] as const;
     evs.forEach((e) => window.addEventListener(e, reset));
 
     return () => {
@@ -207,38 +230,38 @@ export default function PortfolioOS() {
   }, [phase]);
 
   useEffect(() => {
-    let buf = '';
+    let buf = "";
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
-      if (target.closest('input, textarea')) return;
+      if (target.closest("input, textarea")) return;
 
       if (e.key.length === 1) {
         buf = (buf + e.key.toLowerCase()).slice(-4);
-        if (buf === 'bsod') {
-          buf = '';
+        if (buf === "bsod") {
+          buf = "";
           sounds.error();
-          setPhase('bsod');
+          setPhase("bsod");
         }
       }
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   useEffect(() => {
-    if (phase !== 'bsod') return;
+    if (phase !== "bsod") return;
 
-    const wake = () => setPhase('off');
-    window.addEventListener('keydown', wake);
-    window.addEventListener('mousedown', wake);
+    const wake = () => setPhase("off");
+    window.addEventListener("keydown", wake);
+    window.addEventListener("mousedown", wake);
 
     return () => {
-      window.removeEventListener('keydown', wake);
-      window.removeEventListener('mousedown', wake);
+      window.removeEventListener("keydown", wake);
+      window.removeEventListener("mousedown", wake);
     };
   }, [phase]);
 
-  if (phase === 'bsod') {
+  if (phase === "bsod") {
     return (
       <div className="os-screen os-bsod">
         <p className="bsod-title">PortfolioOS</p>
@@ -246,13 +269,16 @@ export default function PortfolioOS() {
           A fatal exception 0E has occurred at 0028:C0011E36 in VXD VMM(01) +
           00010E36. The current portfolio will be terminated.
         </p>
-        <p>* Relax — this is just an easter egg. Your projects are safe in the Upside Down.</p>
+        <p>
+          * Relax — this is just an easter egg. Your projects are safe in the
+          Upside Down.
+        </p>
         <p>* Press any key (or click) to reboot PortfolioOS 95.</p>
       </div>
     );
   }
 
-  if (phase === 'off') {
+  if (phase === "off") {
     return (
       <div className="os-screen os-off os-power-screen">
         <div className="os-off-logo">
@@ -280,7 +306,7 @@ export default function PortfolioOS() {
     );
   }
 
-  if (phase === 'shutdown') {
+  if (phase === "shutdown") {
     return (
       <div className="os-screen os-off os-shutdown-screen">
         <p className="os-safe-line">It's now safe to turn off your computer.</p>
@@ -293,11 +319,11 @@ export default function PortfolioOS() {
     );
   }
 
-  if (phase === 'bios') {
-    return <BiosScreen onDone={() => setPhase('booting')} />;
+  if (phase === "bios") {
+    return <BiosScreen onDone={() => setPhase("booting")} />;
   }
 
-  if (phase === 'booting') {
+  if (phase === "booting") {
     return (
       <div className="os-screen os-boot">
         <div className="os-boot-logo">
@@ -358,6 +384,9 @@ export default function PortfolioOS() {
       onContextMenu={onDesktopContextMenu}
       onClick={() => setDeskMenu(null)}
     >
+      {/* Optional: Starfield Background if you decided to keep it */}
+      {/* <div className="starfield" aria-hidden="true"> ... </div> */}
+
       <div className="os-icons">
         {ICONS.map((ic) => (
           <button
@@ -365,7 +394,7 @@ export default function PortfolioOS() {
             className="os-icon"
             onPointerUp={(event) => {
               // ✅ fingers (real phones + DevTools emulation) open on tap
-              if (event.pointerType === 'touch') open(ic.id);
+              if (event.pointerType === "touch") open(ic.id);
             }}
             onClick={(event) => {
               // keyboard (Enter/Space) + touch fallback
@@ -381,18 +410,18 @@ export default function PortfolioOS() {
         ))}
       </div>
 
-      {win('computer', 'System Properties', '🖥️', 420, <ComputerApp />)}
-      {win('about', 'about_me.txt - Notepad', '📝', 470, <AboutApp />)}
-      {win('projects', 'C:\\PROJECTS', '📁', 560, <ProjectsApp />)}
-      {win('skills', 'Skills - Control Panel', '🛠️', 420, <SkillsApp />)}
-      {win('resume', 'resume.doc - WordPad', '📄', 560, <ResumeApp />)}
-      {win('contact', 'New Message', '📧', 430, <ContactApp />)}
-      {win('guestbook', 'Guestbook', '📖', 420, <GuestbookApp />)}
-      {win('recycle', 'Recycle Bin', '🗑️', 380, <RecycleApp />)}
+      {win("computer", "System Properties", "🖥️", 420, <ComputerApp />)}
+      {win("about", "about_me.txt - Notepad", "📝", 470, <AboutApp />)}
+      {win("projects", "C:\\PROJECTS", "📁", 560, <ProjectsApp />)}
+      {win("skills", "Skills - Control Panel", "🛠️", 420, <SkillsApp />)}
+      {win("resume", "resume.doc - WordPad", "📄", 560, <ResumeApp />)}
+      {win("contact", "New Message", "📧", 430, <ContactApp />)}
+      {win("guestbook", "Guestbook", "📖", 420, <GuestbookApp />)}
+      {win("recycle", "Recycle Bin", "🗑️", 380, <RecycleApp />)}
       {win(
-        'display',
-        'Display Properties',
-        '🎨',
+        "display",
+        "Display Properties",
+        "🎨",
         380,
         <DisplayApp
           current={wallpaper}
@@ -401,8 +430,17 @@ export default function PortfolioOS() {
           onPickScheme={pickScheme}
         />,
       )}
-      {win('pizza', 'Pizza Rat', '🐀', 380, <PizzaRatGame />)}
-      {win('music', 'Music Player', '🎵', 430, <MediaPlayerApp />)}
+      {win("pizza", "Pizza Rat", "🐀", 380, <PizzaRatGame />)}
+      {win("music", "Music Player", "🎵", 430, <MediaPlayerApp />)}
+
+      {/* ✅ 3. RENDER TERMINAL WINDOW */}
+      {win(
+        "terminal",
+        "C:\\WINDOWS\\SYSTEM\\COMMAND.COM",
+        "💻",
+        500,
+        <TerminalApp />,
+      )}
 
       <Taskbar
         windows={windows}
@@ -411,7 +449,7 @@ export default function PortfolioOS() {
         onMinimize={minimize}
         onShutdown={() => {
           sounds.shutdown();
-          setPhase('shutdown');
+          setPhase("shutdown");
         }}
       />
 
@@ -432,7 +470,7 @@ export default function PortfolioOS() {
             className="os-ctx-item"
             onClick={() => {
               setDeskMenu(null);
-              open('computer');
+              open("computer");
             }}
           >
             <span aria-hidden="true">⚙️</span> Properties
@@ -442,7 +480,7 @@ export default function PortfolioOS() {
             className="os-ctx-item"
             onClick={() => {
               setDeskMenu(null);
-              open('display');
+              open("display");
             }}
           >
             <span aria-hidden="true">🎨</span> Display Properties
@@ -452,7 +490,13 @@ export default function PortfolioOS() {
 
       {saver && <Screensaver onWake={() => setSaver(false)} />}
 
-      {!saver && <Clippy onOpenResume={() => open('resume')} />}
+      {/* ✅ UPDATED: Pass activeWindowId to Clippy */}
+      {!saver && (
+        <Clippy
+          onOpenResume={() => open("resume")}
+          activeWindow={activeWindowId}
+        />
+      )}
     </div>
   );
 }
